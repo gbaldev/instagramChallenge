@@ -4,16 +4,13 @@
     "jsx": "react",
     "baseUrl": ".",
     "paths": {
-      "*": ["src/*"],
-      "tests": ["tests/*"],
       "@components/*": ["src/components/*"],
       "@components": ["src/components"],
       "@models/*": ["src/models/*"],
       "@utils/*": ["src/utils/*"],
       "@assets/*": ["src/assets/*"],
       "@services/*": ["src/services/*"],
-      // "@notifications/*": ["src/notifications/*"],
-      // "@notifications": ["src/notifications"],
+      "@services": ["src/services"],
     },
     "types": ["node", "jest"],
   }

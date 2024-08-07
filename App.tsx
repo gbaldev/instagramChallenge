@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import InstagramService from '@services/InstagramService';
+import {InstagramService} from '@services';
 import {Separator, PostCard} from '@components';
 import Post from '@models/Post';
 
