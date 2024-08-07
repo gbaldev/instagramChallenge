@@ -1,117 +1,117 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
   Text,
-  useColorScheme,
-  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
+import InstagramService from './src/services/InstagramService';
+import PostCard from './src/components/PostCard';
+import Separator from './src/components/Separator';
+import Post from './src/models/Post';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const App = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [error, setError] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const getPosts = async () => {
+    setIsLoading(true);
+    try {
+      let _posts = await InstagramService.getPosts();
+      setPosts(_posts ?? []);
+    } catch (e: any) {
+      setPosts([]);
+      setError(e);
+    }
+    setIsLoading(false);
   };
 
+  const onLike = useCallback(
+    (id: string) => {
+      let newPosts = posts.map(post => {
+        if (post.id === id) {
+          return {...post, liked: !post.liked};
+        }
+        return post;
+      });
+      setPosts(newPosts);
+    },
+    [posts],
+  );
+
+  const onSave = useCallback(
+    (id: string) => {
+      let newPosts = posts.map(post => {
+        if (post.id === id) {
+          return {...post, saved: !post.saved};
+        }
+        return post;
+      });
+      setPosts(newPosts);
+    },
+    [posts],
+  );
+
+  const ListSeparatorComponent = useCallback(
+    () => <Separator height={15} />,
+    [],
+  );
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator color={'white'} size={'large'} />
+      </SafeAreaView>
+    );
+  }
+
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView style={styles.container}>
+      {error ? (
+        <>
+          <Text style={styles.text}>Error retrieving data, please</Text>
+          <TouchableOpacity onPress={getPosts}>
+            <Text style={[styles.text, styles.bold]}>Try again</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <FlatList
+          style={styles.flatlist}
+          data={posts}
+          renderItem={({item}) => (
+            <PostCard post={item} onLike={onLike} onSave={onSave} />
+          )}
+          ItemSeparatorComponent={ListSeparatorComponent}
+        />
+      )}
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  text: {
+    color: 'white',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  flatlist: {
+    flex: 1,
+    width: '100%',
+    paddingHorizontal: 10,
   },
-  highlight: {
-    fontWeight: '700',
+  bold: {
+    fontWeight: 'bold',
   },
 });
 
