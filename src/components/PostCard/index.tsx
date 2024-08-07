@@ -1,23 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {ImageBackground, Text, TouchableOpacity} from 'react-native';
-import styles from './styles';
-import {View} from 'react-native';
-import Post from '../../models/Post';
-import {getTimeElapsed} from '../../utils/datesUtils';
+import {ImageBackground, Text, TouchableOpacity, View} from 'react-native';
 /*
-  By using FastImage, we aim to resolve the 403 errors and improve overall image
-  loading reliability and performance in our app, particularly for IPFS-sourced images.
-  It was a necessity since <Image /> would never display the avatar image on Android
-  due to network restrictions.
-    * FastImage also offers several advantages:
-      * 1. Better handling of redirects, which are common with IPFS/Cloudflare setups.
-      * 2. Improved caching mechanisms, reducing load times for previously viewed images.
-      * 3. More robust error handling and retry logic for failed image loads.
-      * 4. Performance optimizations, especially noticeable with large image sets.
+By using FastImage, we aim to resolve the 403 errors and improve overall image
+loading reliability and performance in our app, particularly for IPFS-sourced images.
+It was a necessity since <Image /> would never display the avatar image on Android
+due to network restrictions.
+* FastImage also offers several advantages:
+* 1. Better handling of redirects, which are common with IPFS/Cloudflare setups.
+* 2. Improved caching mechanisms, reducing load times for previously viewed images.
+* 3. More robust error handling and retry logic for failed image loads.
+* 4. Performance optimizations, especially noticeable with large image sets.
 */
 import FastImage from 'react-native-fast-image';
-import {notFoundImage, profileBackgroundImage} from '../../utils/consts';
-import {Separator, Icon} from '../';
+import {notFoundImage, profileBackgroundImage} from '@utils/consts';
+import {getTimeElapsed} from '@utils/datesUtils';
+import {Separator, Icon} from '@components';
+import Post from '@models/Post';
+import styles from './styles';
 
 interface PostProps {
   post: Post;

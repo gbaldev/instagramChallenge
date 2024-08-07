@@ -21,6 +21,7 @@ const App = () => {
     try {
       let _posts = await InstagramService.getPosts();
       setPosts(_posts ?? []);
+      setError(false);
     } catch (e: any) {
       setPosts([]);
       setError(e);

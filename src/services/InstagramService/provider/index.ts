@@ -1,4 +1,4 @@
-import AxiosImpl from '../../axios';
+import AxiosImpl from '@services/axios.ts';
 
 const InstagramProvider = new AxiosImpl();
 
