@@ -7,10 +7,9 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import InstagramService from './src/services/InstagramService';
-import PostCard from './src/components/PostCard';
-import Separator from './src/components/Separator';
-import Post from './src/models/Post';
+import InstagramService from '@services/InstagramService';
+import {Separator, PostCard} from '@components';
+import Post from '@models/Post';
 
 const App = () => {
   const [posts, setPosts] = useState<Post[]>([]);

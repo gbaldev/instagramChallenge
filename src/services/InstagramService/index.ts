@@ -1,5 +1,5 @@
-import Post from '../../models/Post';
-import InstagramApiInstance from '../InstagramInstance';
+import Post from '@models/Post';
+import InstagramApiInstance from '@services/InstagramInstance';
 import InstagramProvider from './provider';
 
 class InstagramService {
